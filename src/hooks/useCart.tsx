@@ -47,7 +47,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
   const addProduct = async (productId: number) => {
     try {
       // TODO
-      console.log(`caiu dentro do addProduct UseCart id: ${productId}`);
+      //console.log(`caiu dentro do addProduct UseCart id: ${productId}`);
 
       const responseProduct = (await api.get(`/products/${productId}`)).data;
       console.log(responseProduct);
@@ -59,9 +59,10 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
 
   const removeProduct = (productId: number) => {
     try {
-      // TODO
+      setCart(cart.filter((item) => item.id !== productId));
+
+      toast.success("Protudo removido com sucesso");
     } catch {
-      // TODO
       toast.error("Não foi possível remover o produto!");
     }
   };
