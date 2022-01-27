@@ -32,7 +32,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
     const storagedCart = localStorage.getItem("@RocketShoes:cart");
 
     if (storagedCart) {
-      console.log(JSON.parse(storagedCart));
+      //console.log(JSON.parse(storagedCart));
       return JSON.parse(storagedCart);
     }
 
@@ -62,6 +62,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
       // TODO
     } catch {
       // TODO
+      toast.error("Não foi possível remover o produto!");
     }
   };
 
