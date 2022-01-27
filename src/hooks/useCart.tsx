@@ -1,7 +1,13 @@
-import { createContext, ReactNode, useContext, useState } from 'react';
-import { toast } from 'react-toastify';
-import { api } from '../services/api';
-import { Product, Stock } from '../types';
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { toast } from "react-toastify";
+import { api } from "../services/api";
+import { Product, Stock } from "../types";
 
 interface CartProviderProps {
   children: ReactNode;
@@ -23,20 +29,31 @@ const CartContext = createContext<CartContextData>({} as CartContextData);
 
 export function CartProvider({ children }: CartProviderProps): JSX.Element {
   const [cart, setCart] = useState<Product[]>(() => {
-    // const storagedCart = Buscar dados do localStorage
+    const storagedCart = localStorage.getItem("@RocketShoes:cart");
 
-    // if (storagedCart) {
-    //   return JSON.parse(storagedCart);
-    // }
+    if (storagedCart) {
+      console.log(JSON.parse(storagedCart));
+      return JSON.parse(storagedCart);
+    }
 
     return [];
   });
 
+  // realiza o incremento de um produto dentro da sessão, apos a atualização do use hook do cart
+  useEffect(() => {
+    localStorage.setItem("@RocketShoes:cart", JSON.stringify(cart));
+  }, [cart]);
+
   const addProduct = async (productId: number) => {
     try {
       // TODO
+      console.log(`caiu dentro do addProduct UseCart id: ${productId}`);
+
+      const responseProduct = (await api.get(`/products/${productId}`)).data;
+      console.log(responseProduct);
+      setCart([...cart, responseProduct]);
     } catch {
-      // TODO
+      toast.error("Não foi possível adicionar o produto!");
     }
   };
 
