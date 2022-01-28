@@ -101,9 +101,31 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
     amount,
   }: UpdateProductAmount) => {
     try {
-      // TODO
+      console.log(
+        `atualizando o produto ${productId} nova quantidade ${amount}`
+      );
+
+      const stockAmount = (await api.get(`/stock/${productId}`)).data;
+
+      console.log(stockAmount);
+      console.log(amount);
+
+      if (stockAmount.amount >= amount) {
+        toast.success("pode atualizar, tem estoque");
+
+        const newCart = cart.map((product) => {
+          return {
+            ...product,
+            amount: productId === product.id ? amount : product.amount,
+          };
+        });
+
+        setCart(newCart);
+      } else {
+        toast.error("Quantidade solicitada fora de estoque");
+      }
     } catch {
-      // TODO
+      toast.error("não foi possível alterar a quantidade");
     }
   };
 
